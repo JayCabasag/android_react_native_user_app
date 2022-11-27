@@ -216,7 +216,7 @@ export default function SigninScreen({navigation}) {
                   underlineColor={COLORS.RED}
                   placeholderTextColor={COLORS.RED}
                   activeOutlineColor={COLORS.RED}
-                  right={<TextInput.Icon icon="eye" onPress={() => setShowPassword(prevState => !prevState)}/>}
+                  right={<TextInput.Icon icon={showPassword ?'eye-off' : 'eye' } onPress={() => setShowPassword(prevState => !prevState)}/>}
                 />
                  <View style={{display: 'flex', marginTop: 10, width: 320}}>
                   <TouchableOpacity

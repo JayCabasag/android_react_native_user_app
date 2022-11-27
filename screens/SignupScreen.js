@@ -304,7 +304,7 @@ export default function SignupScreen({navigation}) {
                   underlineColor={COLORS.RED}
                   placeholderTextColor={COLORS.RED}
                   activeOutlineColor={COLORS.RED}
-                  right={<TextInput.Icon icon="eye" onPress={() => setShowPassword(prevState => !prevState)}/>}
+                  right={<TextInput.Icon icon={showPassword ?'eye-off' : 'eye' } onPress={() => setShowPassword(prevState => !prevState)}/>}
                 />
                  <TextInput
                   mode='outlined'
@@ -318,7 +318,7 @@ export default function SignupScreen({navigation}) {
                   underlineColor={COLORS.RED}
                   placeholderTextColor={COLORS.RED}
                   activeOutlineColor={COLORS.RED}
-                  right={<TextInput.Icon icon="eye" onPress={() => setShowRetypedPassword(prevState => !prevState)}/>}
+                  right={<TextInput.Icon icon={showRetypedPassword ?'eye-off' : 'eye' } onPress={() => setShowRetypedPassword(prevState => !prevState)}/>}
                 />
                  <View 
                   style={{display: 'flex', flexDirection: 'row', width: 320, marginTop: 10, alignItems: 'center'}}
