@@ -45,10 +45,10 @@ const ProfileTab = ({navigation}) => {
     style={styles.scrollView}
     > 
       <Appbar.Header style={{backgroundColor: COLORS.RED, display: 'flex', alignItems: 'center'}} >
-        <Appbar.BackAction onPress={() => {navigation.goBack()}} size={30}/>
-        <Text style={{flex: 1, textAlign: 'center', fontSize: 25, color: COLORS.WHITE}}>Profile</Text>
-        <Button onPress={handleToggleModal}>
-          <Feather name="settings" size={30} color={COLORS.WHITE} />
+        <Appbar.BackAction onPress={() => {navigation.goBack()}} size={23}/>
+        <Text style={{flex: 1, textAlign: 'center', fontSize: 21, color: COLORS.WHITE, fontWeight: '700'}}>Profile</Text>
+        <Button onPress={handleToggleModal} color={COLORS.RED}>
+          <Feather name="settings" size={23} color={COLORS.WHITE}/>
         </Button>
       </Appbar.Header>
       <View style={{justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.RED, height: 300, borderBottomEndRadius: 20, borderBottomLeftRadius: 20, flex: 1}}>
