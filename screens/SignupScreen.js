@@ -27,6 +27,8 @@ export default function SignupScreen({navigation}) {
   const [retypedPassword, setRetypedPassword] = React.useState(false)
   const [userTypeSelected, setUserTypeSelected] = React.useState(STUDENT_USER_TYPE)
   const [agreedToTermsAndConditionsPolicies, setAgreedToTermsAndConditionsPolicies] = React.useState(false)
+  const [showPassword, setShowPassword] = React.useState(true)
+  const [showRetypedPassword, setShowRetypedPassword] = React.useState(true)
 
   const goToRegister = () => {
     navigation.navigate('Signin')
@@ -296,12 +298,13 @@ export default function SignupScreen({navigation}) {
                   value={password}
                   onChangeText={text => setPassword(text)}
                   style={styles.inputField}
-                  secureTextEntry
+                  secureTextEntry={showPassword}
                   selectionColor={COLORS.RED}
                   outlineColor={COLORS.RED}
                   underlineColor={COLORS.RED}
                   placeholderTextColor={COLORS.RED}
                   activeOutlineColor={COLORS.RED}
+                  right={<TextInput.Icon icon="eye" onPress={() => setShowPassword(prevState => !prevState)}/>}
                 />
                  <TextInput
                   mode='outlined'
@@ -309,12 +312,13 @@ export default function SignupScreen({navigation}) {
                   value={retypedPassword}
                   onChangeText={text => setRetypedPassword(text)}
                   style={styles.inputField}
-                  secureTextEntry
+                  secureTextEntry={showRetypedPassword}
                   selectionColor={COLORS.RED}
                   outlineColor={COLORS.RED}
                   underlineColor={COLORS.RED}
                   placeholderTextColor={COLORS.RED}
                   activeOutlineColor={COLORS.RED}
+                  right={<TextInput.Icon icon="eye" onPress={() => setShowRetypedPassword(prevState => !prevState)}/>}
                 />
                  <View 
                   style={{display: 'flex', flexDirection: 'row', width: 320, marginTop: 10, alignItems: 'center'}}
@@ -382,7 +386,7 @@ const styles = StyleSheet.create({
   inputField: {
    marginTop: 10,
    width: 320,
-   height: 60,
+   lineHeight: 60,
    backgroundColor: COLORS.WHITE
   },
   signInButton: {

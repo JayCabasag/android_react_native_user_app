@@ -24,6 +24,7 @@ export default function SigninScreen({navigation}) {
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
   const [userTypeSelected, setUserTypeSelected] = React.useState(STUDENT_USER_TYPE)
+  const [showPassword, setShowPassword] = React.useState(true)
 
   const goToRegister = () => {
     navigation.navigate('Signup')
@@ -209,12 +210,13 @@ export default function SigninScreen({navigation}) {
                   value={password}
                   onChangeText={text => setPassword(text)}
                   style={styles.inputField}
-                  secureTextEntry
+                  secureTextEntry={showPassword}
                   selectionColor={COLORS.RED}
                   outlineColor={COLORS.RED}
                   underlineColor={COLORS.RED}
                   placeholderTextColor={COLORS.RED}
                   activeOutlineColor={COLORS.RED}
+                  right={<TextInput.Icon icon="eye" onPress={() => setShowPassword(prevState => !prevState)}/>}
                 />
                  <View style={{display: 'flex', marginTop: 10, width: 320}}>
                   <TouchableOpacity
@@ -287,8 +289,10 @@ const styles = StyleSheet.create({
   inputField: {
    marginTop: 10,
    width: 320,
-   height: 60,
-   backgroundColor: COLORS.WHITE
+   lineHeight: 60,
+   backgroundColor: COLORS.WHITE,
+   display: 'flex',
+   justifyContent: 'center'
   },
   signInButton: {
     marginTop: 10, 

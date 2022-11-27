@@ -44,7 +44,7 @@ const HomeTab = ({navigation}) => {
   React.useEffect(() => {
     const getBooks = async (db) => {
       const booksCollectionRef = collection(db, 'books');
-      const top100NewCollection = query(booksCollectionRef, limit(TOTAL_BOOK_LOAD_LIMIT), orderBy('createdAt'));
+      const top100NewCollection = query(booksCollectionRef, limit(TOTAL_BOOK_LOAD_LIMIT), orderBy('createdAt', "desc"));
       const bookSnapshot = await getDocs(top100NewCollection);
       const cityList = bookSnapshot.docs.map(doc => {
        return { docId: doc.id,...doc.data()}
