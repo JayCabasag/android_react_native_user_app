@@ -114,8 +114,8 @@ const HomeTab = ({navigation}) => {
     >
       <View style={{paddingHorizontal: 22, paddingVertical: 25, flex: 1,display: 'flex', marginTop: 10,alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row'}}>
         <View style={{marginTop: 10}}>
-            <Text style={{color: COLORS.WHITE, fontWeight: '800', fontSize: 22}}>TAGUIG CITY UNIVERSITY</Text>
-            <Text style={{color: COLORS.WHITE, fontWeight: 'bold', textTransform: 'capitalize'}}>LIBRARY MANAGEMENT</Text>
+            <Text style={{color: COLORS.WHITE, fontWeight: '800', fontSize: 22}}>TECHNO LIBRARY</Text>
+            <Text style={{color: COLORS.WHITE, fontWeight: 'thin', textTransform: 'capitalize'}}>Read, Learn, Inspire, and Glow Feed Our Mind</Text>
         </View>
         <TouchableOpacity
             onPress={gotoSearchTab}    

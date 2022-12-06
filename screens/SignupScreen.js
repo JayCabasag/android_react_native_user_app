@@ -7,25 +7,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Entypo } from '@expo/vector-icons';
 import { StatusBar } from 'react-native';
 import FlashMessage from "react-native-flash-message";
-import { showMessage, hideMessage } from "react-native-flash-message";
-import { collection, getDocs, setDoc, doc, limit, orderBy, query, where, addDoc, serverTimestamp} from 'firebase/firestore/lite';
+import { showMessage } from "react-native-flash-message";
+import { collection, getDocs, query, where, addDoc, serverTimestamp} from 'firebase/firestore/lite';
 import { Base64 } from 'js-base64'
 import { db } from '../firebase/firebaseConfig'
 
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const STUDENT_USER_TYPE = 'student'
-const PROFESSOR_USER_TYPE = 'professor'
 
 export default function SignupScreen({navigation}) {
 
   const [email, setEmail] = React.useState('')
-  const [userId, setUserId] = React.useState('')
+  const [username, setUsername] = React.useState('')
   const [fullname, setFullname] = React.useState('')
   const [password, setPassword] = React.useState('')
   const [retypedPassword, setRetypedPassword] = React.useState(false)
-  const [userTypeSelected, setUserTypeSelected] = React.useState(STUDENT_USER_TYPE)
   const [agreedToTermsAndConditionsPolicies, setAgreedToTermsAndConditionsPolicies] = React.useState(false)
   const [showPassword, setShowPassword] = React.useState(true)
   const [showRetypedPassword, setShowRetypedPassword] = React.useState(true)
@@ -63,8 +60,8 @@ export default function SignupScreen({navigation}) {
       });
     }
 
-    const userIdRef = query(collection(db, "users"), where("id", "==", user.id));
-    const querySnapshotForId = await getDocs(userIdRef);
+    const usernameRef = query(collection(db, "users"), where("username", "==", user.username));
+    const querySnapshotForId = await getDocs(usernameRef);
     let userWithSameId = []
     querySnapshotForId.forEach((doc) => {
       userWithSameId.push({docId: doc.id, ...doc.data()})
@@ -73,7 +70,7 @@ export default function SignupScreen({navigation}) {
     const idAlreadyInUse = userWithSameId?.length > 0
     if(idAlreadyInUse){
       return showMessage({
-        message: `${user?.id} is already in used by other user.`,
+        message: `${user?.name} is already used by other user.`,
         icon: props => <Entypo name="circle-with-cross" size={22} color={COLORS.WHITE} {...props}/>,
         backgroundColor: COLORS.RED
       });
@@ -118,31 +115,14 @@ export default function SignupScreen({navigation}) {
       }
     }
 
-    const isValidateStudentId = (text) => {
-      let reg = /\d{2}-\d{3}/gm;
-      
-      if (reg.test(text) === false) {
-        return false;
-      }
-      else {
-        return true
-      }
+    if(username.length <= 0){
+      return showMessage({
+        message: `Please add your username`,
+        icon: props => <Entypo name="circle-with-cross" size={22} color={COLORS.WHITE} {...props}/>,
+        backgroundColor: COLORS.RED
+      });
     }
 
-    if(userId.length <= 0){
-      return showMessage({
-        message: `Please add your ${userTypeSelected} ID number`,
-        icon: props => <Entypo name="circle-with-cross" size={22} color={COLORS.WHITE} {...props}/>,
-        backgroundColor: COLORS.RED
-      });
-    }
-    if(userTypeSelected === 'student' && !isValidateStudentId(userId)){
-      return showMessage({
-        message: `Your student ID number is invalid e.g. 18-01***`,
-        icon: props => <Entypo name="circle-with-cross" size={22} color={COLORS.WHITE} {...props}/>,
-        backgroundColor: COLORS.RED
-      });
-    }
     if(fullname.length <= 0){
       return showMessage({
         message: `Please add your fullname`,
@@ -208,8 +188,7 @@ export default function SignupScreen({navigation}) {
     }
 
     const user = {
-      id: userId,
-      type: userTypeSelected,
+      username: username,
       fullname: fullname,
       email: email.toLocaleLowerCase(),
       password: Base64.encode(retypedPassword)
@@ -237,30 +216,12 @@ export default function SignupScreen({navigation}) {
               style={{display: 'flex', flexDirection:'column', paddingHorizontal: 22, alignItems: 'center', justifyContent: 'center'}}
               >
               <View style={{display: 'flex', flexDirection: 'row', width: 320, marginTop: 10}}>
-                <Button
-                  color={COLORS.RED}
-                  mode={userTypeSelected === STUDENT_USER_TYPE ? 'contained' : 'outlined'}
-                  labelStyle={userTypeSelected === STUDENT_USER_TYPE ? {color: COLORS.WHITE} : {color: COLORS.RED}}
-                  style={userTypeSelected === STUDENT_USER_TYPE ? styles.userTypeSelectorStudentActive: styles.userTypeSelectorStudent }
-                  onPress={() => setUserTypeSelected(STUDENT_USER_TYPE)}
-                >
-                  Student
-                </Button>
-                <Button
-                  color={COLORS.RED}
-                  mode={userTypeSelected === PROFESSOR_USER_TYPE ? 'contained' : 'outlined'}
-                  labelStyle={userTypeSelected === PROFESSOR_USER_TYPE ? {color: COLORS.WHITE} : {color: COLORS.RED}}
-                  style={userTypeSelected === PROFESSOR_USER_TYPE ? styles.userTypeSelectorProfessorActive : styles.userTypeSelectorProfessor}
-                  onPress={() => setUserTypeSelected(PROFESSOR_USER_TYPE)}
-                >
-                  Professor
-                </Button>
               </View>
                 <TextInput
                   mode='outlined'
-                  label={userTypeSelected === STUDENT_USER_TYPE ? 'Student No.' : 'Professor ID'}
-                  value={userId}
-                  onChangeText={text => setUserId(text)}
+                  label={'Username'}
+                  value={username}
+                  onChangeText={text => setUsername(text.toLocaleLowerCase())}
                   style={styles.inputField}
                   selectionColor={COLORS.RED}
                   outlineColor={COLORS.RED}

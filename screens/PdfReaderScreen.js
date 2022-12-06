@@ -8,7 +8,7 @@ import { COLORS} from '../utils/app_constants';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function PdfReaderScreen({navigation,route}) {
+export default function PdfReaderScreen({navigation, route}) {
    const fileToPreview = route.params.file ?? ''
 
    return (

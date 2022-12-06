@@ -15,15 +15,13 @@ import { UserContext } from '../context/UserContext';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const STUDENT_USER_TYPE = 'student'
-const PROFESSOR_USER_TYPE = 'professor'
+
 
 export default function SigninScreen({navigation}) {
 
   const [user, setUser] = useContext(UserContext)
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
-  const [userTypeSelected, setUserTypeSelected] = React.useState(STUDENT_USER_TYPE)
   const [showPassword, setShowPassword] = React.useState(true)
 
   const goToRegister = () => {
@@ -60,15 +58,15 @@ export default function SigninScreen({navigation}) {
   }
 
   const signInUser = async () => {
-      const userEmailRef = query(collection(db, "users"), where("email", "==", email.toLocaleLowerCase()), where("type", "==", userTypeSelected));
+      const userEmailRef = query(collection(db, "users"), where("email", "==", email.toLocaleLowerCase()));
       const querySnapshot = await getDocs(userEmailRef);
       let userWithSameEmail = []
       querySnapshot.forEach((doc) => {
         userWithSameEmail.push({docId: doc.id, ...doc.data()})
       });
 
-      const userIdRef = query(collection(db, "users"), where("id", "==", email.toLocaleLowerCase()), where("type", "==", userTypeSelected));
-      const querySnapshotForId = await getDocs(userIdRef);
+      const usernameRef = query(collection(db, "users"), where("username", "==", email.toLocaleLowerCase()));
+      const querySnapshotForId = await getDocs(usernameRef);
       let userWithSameId = []
       querySnapshotForId.forEach((doc) => {
         userWithSameId.push({docId: doc.id, ...doc.data()})
@@ -84,7 +82,7 @@ export default function SigninScreen({navigation}) {
         let user = []
 
         if(isEmail){
-          const userRef = query(collection(db, "users"), where("email", "==",email.toLocaleLowerCase()), where("type", "==", userTypeSelected), where("password", "==", Base64.encode(password)));
+          const userRef = query(collection(db, "users"), where("email", "==",email.toLocaleLowerCase()), where("password", "==", Base64.encode(password)));
           const querySnapshot = await getDocs(userRef);
           querySnapshot.forEach((doc) => {
             user.push({docId: doc.id, ...doc.data()})
@@ -92,7 +90,7 @@ export default function SigninScreen({navigation}) {
         }
 
         if(isId){
-          const userRef = query(collection(db, "users"), where("id", "==", email.toLocaleLowerCase()), where("type", "==", userTypeSelected), where("password", "==", Base64.encode(password)));
+          const userRef = query(collection(db, "users"), where("username", "==", email.toLocaleLowerCase()), where("password", "==", Base64.encode(password)));
           const querySnapshot = await getDocs(userRef);
           querySnapshot.forEach((doc) => {
             user.push({docId: doc.id, ...doc.data()})
@@ -110,8 +108,7 @@ export default function SigninScreen({navigation}) {
         if(user?.length > 0){
           const userData = {
             docId: user[0]?.docId,
-            id: user[0]?.id,
-            type: user[0]?.type,
+            username: user[0]?.username,
             fullname: user[0]?.fullname,
             email: user[0]?.email,
             password:  user[0]?.password,
@@ -135,7 +132,7 @@ export default function SigninScreen({navigation}) {
   const handleSignInUser = () => {
     if(email?.length <= 0){
       return showMessage({
-        message: `Add your ${userTypeSelected} ID or email`,
+        message: `Add your username or email`,
         icon: props => <Entypo name="circle-with-cross" size={22} color={COLORS.WHITE} {...props}/>,
         backgroundColor: COLORS.RED
       });
@@ -172,29 +169,9 @@ export default function SigninScreen({navigation}) {
               <View
               style={{display: 'flex', flexDirection:'column', paddingHorizontal: 22, alignItems: 'center', justifyContent: 'center'}}
             >
-              <View style={{display: 'flex', flexDirection: 'row', width: 320, marginTop: 10}}>
-                <Button
-                  color={COLORS.RED}
-                  mode={userTypeSelected === STUDENT_USER_TYPE ? 'contained' : 'outlined'}
-                  labelStyle={userTypeSelected === STUDENT_USER_TYPE ? {color: COLORS.WHITE} : {color: COLORS.RED}}
-                  style={userTypeSelected === STUDENT_USER_TYPE ? styles.userTypeSelectorStudentActive: styles.userTypeSelectorStudent }
-                  onPress={() => setUserTypeSelected(STUDENT_USER_TYPE)}
-                >
-                  Student
-                </Button>
-                <Button
-                  color={COLORS.RED}
-                  mode={userTypeSelected === PROFESSOR_USER_TYPE ? 'contained' : 'outlined'}
-                  labelStyle={userTypeSelected === PROFESSOR_USER_TYPE ? {color: COLORS.WHITE} : {color: COLORS.RED}}
-                  style={userTypeSelected === PROFESSOR_USER_TYPE ? styles.userTypeSelectorProfessorActive : styles.userTypeSelectorProfessor}
-                  onPress={() => setUserTypeSelected(PROFESSOR_USER_TYPE)}
-                >
-                  Professor
-                </Button>
-              </View>
               <TextInput
                   mode='outlined'
-                  label={userTypeSelected === STUDENT_USER_TYPE ? 'Student No. or Email' : 'Professor ID or Email'}
+                  label={'Username or email'}
                   value={email}
                   onChangeText={text => setEmail(text)}
                   style={styles.inputField}

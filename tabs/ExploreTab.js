@@ -8,6 +8,7 @@ import { collection, getDocs, setDoc, doc, limit, orderBy, query, where} from 'f
 import { db } from '../firebase/firebaseConfig'
 import { TOTAL_BOOK_LOAD_LIMIT } from '../utils/app_constants'
 import { UserContext } from '../context/UserContext'
+import axios from 'axios'
 
 const ExploreTab = ({navigation}) => {
   const [user, setUser] = useContext(UserContext)
@@ -27,48 +28,28 @@ const ExploreTab = ({navigation}) => {
   const [totalBookLoadLimit, setTotalBookLoadLimit] = useState(TOTAL_BOOK_LOAD_LIMIT)
 
   React.useEffect(() => {
-    const getBooks = async (db) => {
-      const hasEmptyValue = searchQuery === ''
+    const getBooks = async () => {
+      setIsLoading(true)
+      const config = {
+        headers:{
+          'X-Algolia-API-Key': 'abe33f04785a63c7286f8f2d92400ea4',
+          'X-Algolia-Application-Id': 'JXGVNF2YFE'
+        }
+      };
+      const url = `https://JXGVNF2YFE-dsn.algolia.net/1/indexes/books?query=${searchQuery}&hitsPerPage=${totalBookLoadLimit}&getRankingInfo=1`;
 
-      if(hasEmptyValue){
-        setIsLoading(true)
-        const booksCollectionRef = collection(db, 'books');
-        const top100NewCollection = query(booksCollectionRef, limit(totalBookLoadLimit));
-        const bookSnapshot = await getDocs(top100NewCollection);
-        const bookList = bookSnapshot.docs.map(doc => {
-         return { docId: doc.id,...doc.data()}
-        });
-        const noResults = bookList?.length <= 0
-        if(noResults){
-          setNoResultsFound(true)
-        }
-        if(!noResults){
-          setNoResultsFound(false)
-        }
+      await axios.get(url, config)
+      .then(res=>{
+        setbookResultsList([...res.data.hits])
         setIsLoading(false)
-        return setbookResultsList([...bookList]);
-      }
+      })
+      .catch(err=> {
+        console.log(err)
+        setIsLoading(false)
+      })
 
-      if(!hasEmptyValue){
-        setIsLoading(true)
-        const booksCollectionRef = collection(db, 'books');
-        const top100NewCollection = query(booksCollectionRef, where("title","==",searchQuery), limit(totalBookLoadLimit));
-        const bookSnapshot = await getDocs(top100NewCollection);
-        const bookList = bookSnapshot.docs.map(doc => {
-         return { docId: doc.id,...doc.data()}
-        });
-        const noResults = bookList?.length <= 0
-        if(noResults){
-          setNoResultsFound(true)
-        }
-        if(!noResults){
-          setNoResultsFound(false)
-        }
-        setIsLoading(false)
-        return setbookResultsList([...bookList]);
-      }
     }
-    getBooks(db)
+    getBooks()
   }, [searchQuery, totalBookLoadLimit])
 
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -78,7 +59,7 @@ const ExploreTab = ({navigation}) => {
   };
 
   const handleGoToBookPreviewScreen = (data) => {
-    navigation.navigate('BookPreview', {docId: data?.docId ?? ''})
+    navigation.navigate('BookPreview', {docId: data?.objectID ?? ''})
   }
 
   return (  

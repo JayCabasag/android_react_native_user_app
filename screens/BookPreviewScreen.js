@@ -10,7 +10,6 @@ import { showMessage } from 'react-native-flash-message';
 import { UserContext } from '../context/UserContext';
 import { Entypo } from '@expo/vector-icons'
 
-
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -148,7 +147,7 @@ export default function BookPreviewScreen({navigation,route}) {
                                 >
                                 Read
                                 </Button>
-                                <Button style={{ flex: 1}} mode="outlined" onPress={() => Linking.openURL(data?.file)}  >
+                                <Button style={{ flex: 1}} mode="outlined" onPress={() => Linking.openURL(data?.file)} color={COLORS.RED}>
                                 <FontAwesome name='download' size={15} color={COLORS.RED}/>
                                 <Text style={{color: COLORS.RED}}>
                                     {' '} Download

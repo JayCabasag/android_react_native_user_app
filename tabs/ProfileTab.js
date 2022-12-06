@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState} from 'react'
 import { View, Text, StyleSheet, StatusBar, ScrollView} from 'react-native'
 import { Appbar, Avatar, Button, Chip, List } from 'react-native-paper'
 import { COLORS } from '../utils/app_constants'
@@ -7,11 +7,15 @@ import { Feather, MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment'
 import { UserContext } from '../context/UserContext'
+import { collection, getDocs, limit, query, where} from 'firebase/firestore/lite';
+import { db } from '../firebase/firebaseConfig'
+
 const ProfileTab = ({navigation}) => {
 
   const [showModal, setShowModal] = React.useState(false)
   const [user, setUser] = useContext(UserContext)
   const dateAccountCreated = user?.createdAt ?? '20-11-2022'
+  const [favoriteBookList, setFavoriteBookList] = useState([])
   const formattedDateFromFirestore = new Date(dateAccountCreated.seconds * 1000 + dateAccountCreated.nanoseconds/1000000)
   const handleToggleModal = () => {
     setShowModal((prevState) => !prevState)
@@ -38,6 +42,20 @@ const ProfileTab = ({navigation}) => {
     })
   }
 
+  React.useEffect(() => {
+    const getUserBookFavorites = async () => {
+      const userReference = `users/${user?.docId}`
+      const favoriteRefs = query(collection(db, "favorites"), where("user", "==", userReference));
+      const querySnapshot = await getDocs(favoriteRefs);
+      let userFavoriteList = []
+      querySnapshot.forEach((doc) => {
+        userFavoriteList.push({favoriteId: doc.id, ...doc.data()})
+     });
+     setFavoriteBookList([...userFavoriteList])
+    }
+    getUserBookFavorites()
+  }, [])
+
   return (
     <ScrollView 
     showsVerticalScrollIndicator={false}
@@ -57,11 +75,10 @@ const ProfileTab = ({navigation}) => {
           <Text style={{color: COLORS.WHITE, fontSize: 25, marginRight: 10, textTransform: 'capitalize'}}>{user?.fullname ?? 'Not set'}</Text>
           <MaterialIcons name='check-circle' size={25} color={COLORS.WHITE}/>
         </View>
-        <Text style={{color: COLORS.WHITE, textTransform: 'capitalize'}}>{user?.type ?? 'Not set'}</Text>
       </View>
       <List.Item
-        title="Student Id"
-        description={user?.id ?? 'Not set'}
+        title="Username"
+        description={user?.username ?? 'Not set'}
         left={props => <List.Icon {...props} icon='account' />}
         style={{paddingVertical: 15}}
       />
@@ -79,7 +96,7 @@ const ProfileTab = ({navigation}) => {
       />
       <List.Item
         title="Books added to Favorites"
-        description={20}
+        description={(favoriteBookList?.length).toString()}
         left={props => <List.Icon {...props} icon="heart" />}
         style={{paddingVertical: 15}}
       />
