@@ -37,10 +37,15 @@ const ExploreTab = ({navigation}) => {
         }
       };
       const url = `https://JXGVNF2YFE-dsn.algolia.net/1/indexes/books?query=${searchQuery}&hitsPerPage=${totalBookLoadLimit}&getRankingInfo=1`;
-
       await axios.get(url, config)
       .then(res=>{
         setbookResultsList([...res.data.hits])
+        if(res.data.hits?.length <= 0){
+          setNoResultsFound(true)
+        }
+        if(res.data.hits?.length > 0){
+          setNoResultsFound(false)
+        }
         setIsLoading(false)
       })
       .catch(err=> {
