@@ -104,6 +104,10 @@ export default function BookPreviewScreen({navigation,route}) {
       })
    }
 
+   const handleOpenPdfReaderScreen = (file) => {
+    navigation.navigate('PdfReaderScreen', {file: file})
+   }
+
    return (
     <ScrollView
           style={styles.mainScrollbar}  
@@ -143,7 +147,7 @@ export default function BookPreviewScreen({navigation,route}) {
                                 icon={'eye'} 
                                 style={{ flex: 1, backgroundColor: COLORS.RED, marginRight: 10}}
                                 mode="contained"
-                                //   onPress={() => handleOpenPdfReaderScreen(data?.file ?? '')}
+                                  onPress={() => handleOpenPdfReaderScreen(data?.file ?? '')}
                                 >
                                 Read
                                 </Button>
