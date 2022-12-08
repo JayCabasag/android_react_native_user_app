@@ -23,7 +23,7 @@ export default function App() {
           <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName={'Signin'}>
             <Stack.Screen name="Home" component={HomeScreen}/>
             <Stack.Screen name="BookPreview" component={BookPreviewScreen} />
-            <Stack.Screen name="PdfReaderScreen" component={PdfReaderScreen} />
+            <Stack.Screen name="PdfReaderScreen" component={PdfReaderScreen} options={{animation:'none'}}/>
             <Stack.Screen name="Onboarding" component={OnboardingScreen} />
             <Stack.Screen name="Signin" component={SigninScreen} />
             <Stack.Screen name="Signup" component={SignupScreen} />

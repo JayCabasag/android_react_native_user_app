@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { SafeAreaView, StatusBar, Text, TouchableOpacity, View, Image, ScrollView, StyleSheet, Dimensions, ActivityIndicator, Linking, Alert} from 'react-native'
+import { Text, View, Image, ScrollView, StyleSheet, Dimensions, ActivityIndicator, Linking, Alert} from 'react-native'
 import { Appbar, Button } from 'react-native-paper';
 import { COLORS, IMAGES } from '../utils/app_constants';
 import { FontAwesome } from '@expo/vector-icons';
@@ -105,7 +105,18 @@ export default function BookPreviewScreen({navigation,route}) {
    }
 
    const handleOpenPdfReaderScreen = (file) => {
-    navigation.navigate('PdfReaderScreen', {file: file})
+    console.log(file)
+    return Alert.alert(
+        "Message",
+        "Our pdf player is powered by google docs. Make sure to refresh the page by clicking back button if the pdf won't load. Would you like to continue?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel"
+          },
+          { text: "OK", onPress: () =>  navigation.navigate('PdfReaderScreen', {file: file})}
+        ]
+      );
    }
 
    return (
@@ -147,7 +158,7 @@ export default function BookPreviewScreen({navigation,route}) {
                                 icon={'eye'} 
                                 style={{ flex: 1, backgroundColor: COLORS.RED, marginRight: 10}}
                                 mode="contained"
-                                  onPress={() => handleOpenPdfReaderScreen(data?.file ?? '')}
+                                  onPress={() => handleOpenPdfReaderScreen(data?.googleDocsLink ?? '')}
                                 >
                                 Read
                                 </Button>

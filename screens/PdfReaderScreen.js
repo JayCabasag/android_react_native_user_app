@@ -1,47 +1,64 @@
-import React from 'react'
-import { SafeAreaView, StatusBar, Text, TouchableOpacity, View, Image, Dimensions} from 'react-native'
-import { StyleSheet} from 'react-native';
-import { Button } from 'react-native-paper';
-import { ScrollView } from 'react-native-safe-area-context';
-import { COLORS} from '../utils/app_constants';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, Dimensions } from 'react-native';
+import { Appbar } from 'react-native-paper';
+import { WebView } from 'react-native-webview';
+import { COLORS } from '../utils/app_constants';
+import { ActivityIndicator } from 'react-native-paper';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function PdfReaderScreen({navigation, route}) {
-   const fileToPreview = route.params.file ?? ''
+const PdfReaderScreen = ({ navigation, route: {params :{ file }} }) => {
 
-   return (
-    <SafeAreaView style={{height: '100%'}}>
-        <ScrollView
-            style={styles.scrollView}
+  const [isLoadingPdf, setIsLoadingPdf] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  const handleOnLoad = (data) => {
+    setIsLoadingPdf(false)
+  }
+  return (
+    <View style={{ flex: 1 }}>
+      <Appbar.Header
+        style={{
+          backgroundColor: COLORS.RED,
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+        }}
+      >
+        <Appbar.BackAction onPress={() => navigation.goBack()} size={23} />
+        <Appbar.Content title={'Pdf viewer'} />
+      </Appbar.Header>
+      {isLoadingPdf && (
+        <View
+          style={{
+            height: windowHeight,
+            width: windowWidth,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
-            <View style={styles.container}>
-            <Text>{fileToPreview}</Text>
-            <Button
-              onPress={() => navigation.navigate('Home')}
-            >
-                Return Home
-            </Button>
-            </View>
-        </ScrollView>
-    </SafeAreaView>
-  )
-}
+          <ActivityIndicator size={30} animating={true} color={COLORS.RED} style={{ height: 'auto', marginBottom: 15 }} />
+          <Text>Loading pdf file... please wait</Text>
+        </View>
+      )}
+      <View style={{ flex: 1 }}>
+        <WebView
+          source={{
+            uri:
+            file,
+          }}
+          onLoad={(data) => handleOnLoad(data)}
+          onError={(error) => setIsError(true)}
+          style={{ flex: 1 }}
+        />
+        {
+          isError && (<Text>An error occured</Text>)
+        }
+      </View>
+    </View>
+  );
+};
 
-const styles = StyleSheet.create({
-    scrollView: {
-        height: '100%',
-        width: '100%'
-    },
-    container: {
-      paddingTop: StatusBar.currentHeight,
-      backgroundColor: COLORS.WHITE,
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-      height: windowHeight,
-      width: windowWidth,
-      display: 'flex'
-    },
-});
-  
+export default PdfReaderScreen   
