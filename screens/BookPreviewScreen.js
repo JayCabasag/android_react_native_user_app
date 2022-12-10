@@ -104,8 +104,8 @@ export default function BookPreviewScreen({navigation,route}) {
       })
    }
 
-   const handleOpenPdfReaderScreen = (file) => {
-    console.log(file)
+   const handleOpenPdfReaderScreen = (data, file) => {
+    if(file === '') return alert('View pdf for this book is not yet available. You can download it instead.')
     return Alert.alert(
         "Message",
         "Our pdf player is powered by google docs. Make sure to refresh the page by clicking back button if the pdf won't load. Would you like to continue?",
@@ -150,15 +150,15 @@ export default function BookPreviewScreen({navigation,route}) {
                             <Text style={{color: COLORS.GRAY}}>By: {data?.author ?? 'Unknown author'} </Text>
                             <Text style={{textAlign: 'center', fontSize: 18, fontWeight: 'bold'}}>{data?.title ?? 'No title'}</Text>
                             <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 10}}>
-                                <Octicons name='download' size={15} color={COLORS.GRAY}/>
-                                <Text style={{color: COLORS.GRAY, marginLeft: 5}}>{data?.totalReads ?? 0} Total reads</Text>
+                                {/* <Octicons name='download' size={15} color={COLORS.GRAY}/>
+                                <Text style={{color: COLORS.GRAY, marginLeft: 5}}>{data?.totalReads ?? 0} Total reads</Text> */}
                             </View>
                             <View style={{display: 'flex', flex: 1, flexDirection: 'row', marginTop: 10}}>
                                 <Button 
                                 icon={'eye'} 
                                 style={{ flex: 1, backgroundColor: COLORS.RED, marginRight: 10}}
                                 mode="contained"
-                                  onPress={() => handleOpenPdfReaderScreen(data?.googleDocsLink ?? '')}
+                                  onPress={() => handleOpenPdfReaderScreen(data, data?.googleDocsLink ?? '')}
                                 >
                                 Read
                                 </Button>

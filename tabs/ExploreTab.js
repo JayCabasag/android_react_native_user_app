@@ -89,7 +89,7 @@ const ExploreTab = ({navigation}) => {
       </Appbar.Header>
       <View style={{paddingHorizontal: 22, paddingVertical: 15}}>
         <Searchbar
-          placeholder="Search..."
+          placeholder="Search topic..."
           onChangeText={onChangeSearch}
           inputStyle={{color: COLORS.BLACK}}
           defaultValue={searchQuery}

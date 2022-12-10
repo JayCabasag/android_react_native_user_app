@@ -17,3 +17,5 @@ export const IMAGES = {
 
 export const TOTAL_BOOK_LOAD_LIMIT = 10
 export const DEVELOPEMENT_STATE = 'official'
+
+export const RECOVERY_PASSWORD_SERVER_LINK = 'https://plastic-grass-production.up.railway.app/recovery-password'

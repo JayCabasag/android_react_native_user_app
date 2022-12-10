@@ -16,6 +16,7 @@ const SearchBookList = ({data, handleGoToBookPreviewScreen}) => {
         <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', flex: 1}}>
             <View style={{flex: 1, marginLeft: 22}}>
             <Text style={{fontWeight: '900', fontSize: 14}}>{data?.title ?? 'No title'}</Text>
+            <Text style={{fontSize: 12}}>Published: {data?.publishedDate ?? 'Not available'}</Text> 
             <Text style={{fontSize: 12}}>By : {data?.author ?? 'Unknown author'}</Text>            
             </View>
             <View style={{marginLeft: 15}}>
